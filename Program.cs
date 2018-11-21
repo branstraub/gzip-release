@@ -57,9 +57,8 @@ namespace gzip
                 var blobContainerD = blobClientD.GetContainerReference("gzip-"+container);
 
                 // Do the compression work
-                await new Utility().EnsureGzipFiles(blobContainerS, blobContainerD, prefix, queueCS,queueName, queueNameLog);
+                await new Utility().EnsureGzipFiles(blobContainerS, blobContainerD, prefix, queueCS,queueName);
 
-              
             }
 
             stopWatch.Stop();

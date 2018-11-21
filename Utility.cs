@@ -18,7 +18,7 @@ namespace gzip
         private long bytesBefore = 0;
         private long bytesAfter = 0;
 
-        public async Task EnsureGzipFiles(CloudBlobContainer containerS, CloudBlobContainer containerD, string prefix, string queueString, string queueName, string queueNameLog)
+        public async Task EnsureGzipFiles(CloudBlobContainer containerS, CloudBlobContainer containerD, string prefix, string queueString, string queueName)
         {
           
             var blobInfos = containerS.ListBlobs($"{prefix}/", true, BlobListingDetails.Metadata);
@@ -32,14 +32,14 @@ namespace gzip
             Console.WriteLine("Files: " + blobInfos.Count());
 
             foreach(var blobInfo in blobInfos){
-                 await Upload(blobInfo, containerD, queueName, queueString, queueNameLog);
+                 await Upload(blobInfo, containerD, queueName, queueString);
             }
 
             //Console.WriteLine("Size Before: " + bytesBefore / 1024 / 1024 + "mb");
             //Console.WriteLine("Size After: " + bytesAfter / 1024 / 1024 + "mb");
         }
 
-        public async Task Upload(IListBlobItem blobInfo, CloudBlobContainer containerD, string queueName, string queueString, string queueNameLog){
+        public async Task Upload(IListBlobItem blobInfo, CloudBlobContainer containerD, string queueName, string queueString){
             
                 var blob = (CloudBlob)blobInfo; 
                 byte[] compressedBytes;
