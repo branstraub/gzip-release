@@ -34,6 +34,7 @@ namespace gzip
             while(msg != "null"){
             
                 var retrievedMessage = await queue.GetMessageAsync();
+                await queue.DeleteMessageAsync(retrievedMessage);
 
                 if(retrievedMessage != null){
                     msg = retrievedMessage.AsString;
@@ -58,8 +59,7 @@ namespace gzip
                 // Do the compression work
                 await new Utility().EnsureGzipFiles(blobContainerS, blobContainerD, prefix, queueCS,queueName, queueNameLog);
 
-                await queue.DeleteMessageAsync(retrievedMessage);
-                //await Task.Delay(500);
+              
             }
 
             stopWatch.Stop();
@@ -67,7 +67,7 @@ namespace gzip
 
             var queueLog = queueClient.GetQueueReference(queueNameLog);
             var message = new CloudQueueMessage("RunTime " + ts);
-            await queueLog.AddMessageAsync(message);
+            queueLog.AddMessage(message);
         }
     }
 }
