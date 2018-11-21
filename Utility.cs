@@ -75,9 +75,6 @@ namespace gzip
                     var queue = queueClient.GetQueueReference(queueName);
                     var message = new CloudQueueMessage(blob.Uri.AbsolutePath.Substring(1, blob.Uri.AbsolutePath.LastIndexOf('/')-1));
                     await queue.AddMessageAsync(message);
-                    var queuelog = queueClient.GetQueueReference(queueNameLog);
-                    var message2 = new CloudQueueMessage(e.Data+e.Message+e.InnerException);
-                    await queue.AddMessageAsync(message2);
                     return;
                 }
 
