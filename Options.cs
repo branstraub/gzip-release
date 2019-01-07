@@ -9,8 +9,10 @@ namespace gzip
 {
     class Options
     {
-        public string ConnectionStringSource { get; set; }
-        public string ConnectionStringDestination { get; set; }
+        public string BlobConnectionStringSource { get; set; }
+        public string BlobConnectionStringDestination { get; set; }
+        public string QueueConnectionString { get; set; }
+        public string QueueName { get; set; }
 
     }
 
