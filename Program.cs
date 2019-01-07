@@ -23,8 +23,8 @@ namespace gzip
             options.QueueConnectionString = args[2];
             options.QueueName = args[3];
           
-            var storageAccount = CloudStorageAccount.Parse(options.BlobConnectionStringSource);
-            var queueClient = storageAccount.CreateCloudQueueClient();
+            var storageAccountQueue = CloudStorageAccount.Parse(options.QueueConnectionString);
+            var queueClient = storageAccountQueue.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference(options.QueueName);
 
             var stopWatch = new Stopwatch();
@@ -36,17 +36,17 @@ namespace gzip
             while(msg != "null"){
             
                 var retrievedMessage = await queue.GetMessageAsync();
-                await queue.DeleteMessageAsync(retrievedMessage);
-
+                
                 if(retrievedMessage != null){
                     msg = retrievedMessage.AsString;
+                    await queue.DeleteMessageAsync(retrievedMessage);
                 }else{
                     msg = "null";
                     return;
                 }
-            
+
                 var container = msg.Split('/')[3];
-                var fileName = msg.Split('/').Last();
+                var fileName = string.Join("/",msg.Split('/').Skip(4));
                
                 var storageAccountS = CloudStorageAccount.Parse(options.BlobConnectionStringSource);
                 var storageAccountD = CloudStorageAccount.Parse(options.BlobConnectionStringDestination);
