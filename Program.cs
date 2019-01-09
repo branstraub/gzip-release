@@ -47,7 +47,7 @@ namespace gzip
 
                 var container = msg.Split('/')[3];
                 var fileName = string.Join("/",msg.Split('/').Skip(4));
-               
+				var yearAndMonth = fileName.Substring(0, 6);
                 var storageAccountS = CloudStorageAccount.Parse(options.BlobConnectionStringSource);
                 var storageAccountD = CloudStorageAccount.Parse(options.BlobConnectionStringDestination);
                 
@@ -55,10 +55,10 @@ namespace gzip
                 var blobContainerS = blobClientS.GetContainerReference(container);
 
                 var blobClientD = storageAccountD.CreateCloudBlobClient();
-                var blobContainerD = blobClientD.GetContainerReference("gzip-"+container);
+                var blobContainerD = blobClientD.GetContainerReference(container+yearAndMonth+"compressed");
 
                 // Do the compression work
-                await new Utility().EnsureGzipFiles(blobContainerS, blobContainerD, fileName);
+                await new Utility().EnsureGzipFiles(blobContainerS, blobContainerD, fileName, options.QueueName, options.QueueConnectionString, msg);
 
             }
 

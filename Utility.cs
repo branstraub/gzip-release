@@ -15,15 +15,15 @@ namespace gzip
 {
     class Utility
     {
-       public async Task EnsureGzipFiles(CloudBlobContainer containerS, CloudBlobContainer containerD, string fileName)
+       public async Task EnsureGzipFiles(CloudBlobContainer containerS, CloudBlobContainer containerD, string fileName, string queueName, string queueString, string originalMessage)
         {
           
             var blobInfo = containerS.GetBlobReference(fileName);
-            await Upload(blobInfo, containerD);
+            await Upload(blobInfo, containerD, queueName, queueString, originalMessage);
             
         }
 
-        public async Task Upload(IListBlobItem blobInfo, CloudBlobContainer containerD){
+        public async Task Upload(IListBlobItem blobInfo, CloudBlobContainer containerD, string queueName, string queueString, string originalMessage){
             
                 var blob = (CloudBlob)blobInfo; 
                 byte[] compressedBytes;
@@ -51,6 +51,11 @@ namespace gzip
                 try{
                     await destinationBlob.UploadFromByteArrayAsync(compressedBytes, 0, compressedBytes.Length);
                 }catch(Exception e){
+                    var storageAccount = CloudStorageAccount.Parse(queueString);
+                    var queueClient = storageAccount.CreateCloudQueueClient();
+                    var queue = queueClient.GetQueueReference(queueName);
+                    var message = new CloudQueueMessage(originalMessage);
+                    await queue.AddMessageAsync(message);
                     return;
                 }
 
