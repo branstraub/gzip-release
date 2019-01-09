@@ -1,2 +1,6 @@
 bin/
 obj/
+.vs/gzip/v15/Server/sqlite3/storage.ide-wal
+.vs/gzip/v15/Server/sqlite3/storage.ide-shm
+.vs/gzip/v15/Server/sqlite3/storage.ide
+.vs/gzip/v15/Server/sqlite3/db.lock
